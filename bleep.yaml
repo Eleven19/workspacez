@@ -4,21 +4,14 @@ jvm:
   name: graalvm-java17:22.3.1
 projects:
   tests:
-    # cross:
-    #   js213:
-    #     dependencies: io.github.cquiroz::scala-java-time:2.5.0
-    #   js3:
-    #     dependencies: io.github.cquiroz::scala-java-time:2.5.0
-    #   native213:
-    #     dependencies: io.github.cquiroz::scala-java-time:2.5.0
-    #   native3:
-    #     dependencies: io.github.cquiroz::scala-java-time:2.5.0
-    dependencies:  
+    dependencies:
     - dev.zio::zio-test-sbt:2.0.16
     - dev.zio::zio-test:2.0.16
-    -  io.github.cquiroz::scala-java-time:2.5.0
+    - io.github.cquiroz::scala-java-time:2.5.0
     dependsOn: workspacez
-    extends: template-cross-all
+    extends:
+    - template-cross-all
+    - template-test-js
     isTestProject: true
     testFrameworks: zio.test.sbt.ZTestFramework
   workspacez:
@@ -107,3 +100,7 @@ templates:
     extends:
     - template-native
     - template-scala-3
+  template-test-js:
+    extends: template-js
+    platform:
+      jsKind: commonjs
