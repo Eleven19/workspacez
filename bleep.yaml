@@ -1,0 +1,109 @@
+$schema: https://raw.githubusercontent.com/oyvindberg/bleep/master/schema.json
+$version: 0.0.2
+jvm:
+  name: graalvm-java17:22.3.1
+projects:
+  tests:
+    # cross:
+    #   js213:
+    #     dependencies: io.github.cquiroz::scala-java-time:2.5.0
+    #   js3:
+    #     dependencies: io.github.cquiroz::scala-java-time:2.5.0
+    #   native213:
+    #     dependencies: io.github.cquiroz::scala-java-time:2.5.0
+    #   native3:
+    #     dependencies: io.github.cquiroz::scala-java-time:2.5.0
+    dependencies:  
+    - dev.zio::zio-test-sbt:2.0.16
+    - dev.zio::zio-test:2.0.16
+    -  io.github.cquiroz::scala-java-time:2.5.0
+    dependsOn: workspacez
+    extends: template-cross-all
+    isTestProject: true
+    testFrameworks: zio.test.sbt.ZTestFramework
+  workspacez:
+    dependsOn: workspacez-path
+    extends: template-cross-all
+  workspacez-cli:
+    dependencies: dev.zio::zio-cli:0.5.0
+    dependsOn: workspacez
+    extends: template-cross-tooling
+  workspacez-path:
+    dependencies:
+    - com.lihaoyi::fansi:0.3.1
+    - dev.zio::zio-prelude:1.0.0-RC20
+    - dev.zio::zio-streams:2.0.16
+    - dev.zio::zio:2.0.16
+    extends: template-cross-all
+templates:
+  template-common:
+    scala:
+      options: -encoding utf8 -feature -unchecked
+      strict: true
+    source-layout: cross-full
+  template-cross-all:
+    cross:
+      js213:
+        extends: template-scala-2.13-js
+      js3:
+        extends: template-scala-3-js
+      jvm213:
+        extends: template-scala-2.13-jvm
+      jvm3:
+        extends: template-scala-3-jvm
+      native213:
+        extends: template-scala-2.13-native
+      native3:
+        extends: template-scala-3-native
+    extends: template-common
+  template-cross-tooling:
+    cross:
+      jvm213:
+        extends: template-scala-2.13-jvm
+      jvm3:
+        extends: template-scala-3-jvm
+  template-js:
+    platform:
+      jsNodeVersion: 18.4.0
+      jsVersion: 1.13.1
+      name: js
+  template-jvm:
+    platform:
+      name: jvm
+  template-native:
+    platform:
+      name: native
+      nativeGc: immix
+      nativeMode: debug
+      nativeVersion: 0.4.15
+  template-scala-2:
+    scala:
+      options: -Xsource:3
+      version: 2.13.11
+  template-scala-2.13-js:
+    extends:
+    - template-js
+    - template-scala-2
+  template-scala-2.13-jvm:
+    extends:
+    - template-jvm
+    - template-scala-2
+  template-scala-2.13-native:
+    extends:
+    - template-native
+    - template-scala-2
+  template-scala-3:
+    scala:
+      version: 3.3.0
+  template-scala-3-js:
+    extends:
+    - template-js
+    - template-scala-3
+  template-scala-3-jvm:
+    extends:
+    - template-jvm
+    - template-scala-3
+  template-scala-3-native:
+    extends:
+    - template-native
+    - template-scala-3
